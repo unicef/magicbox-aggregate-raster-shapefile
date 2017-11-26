@@ -6,7 +6,9 @@ const results_dir = config.results_dir
 const shapefiles_dir = config.shapefiles_dir
 const aggregate = require('./aggregate_raster_by_shapefile')
 const mkdirp = require('mkdirp');
-
+let go_live = false;
+const start_country = 'chn';
+var re = new RegExp(start_country, 'i');
 const countries = fs.readdirSync(rasters_dir)
 .reduce((h, country) => {
   if (country.match(/^[a-z]{3}$/)) {
@@ -63,12 +65,14 @@ function sum_up_population_per_admins(results) {
 const country_codes = Object.keys(countries);
 bluebird.each(country_codes, country_code => {
   console.log('Getting', country_code)
-  // if (start_country && start_country.match(/country_code/i)) {
-  //   go_live = true
-  // }
-  // if (!go_live) {
-  //   return
-  // }  
+   if (start_country && country_code.match(re)) {
+     console.log('Going live with', country_code, re);
+     go_live = true
+   }
+   if (!go_live) {
+     return
+   }  
+   console.log('!!!!', country_code);
   return aggregate_raster_by_all_country_shapefiles(country_code)
 }, {concurrency: 1})
 .then(process.exit)
