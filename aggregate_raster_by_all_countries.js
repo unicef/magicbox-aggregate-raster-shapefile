@@ -69,7 +69,6 @@ function sum_up_population_per_admins(results) {
 // Loop through country codes
 // and aggregate country raster
 // by each shapefile for that country
-
 const country_codes = Object.keys(countries);
 bluebird.each(country_codes, country_code => {
   console.log('Getting', country_code)
