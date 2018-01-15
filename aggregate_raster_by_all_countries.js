@@ -1,12 +1,17 @@
 const bluebird = require('bluebird');
 const config = require('./config');
 const fs = require('fs');
+// Directory with rasters
 const rasters_dir = config.rasters_dir
+// Dir where we send results
 const results_dir = config.results_dir
+// Dir with Shapefiles
 const shapefiles_dir = config.shapefiles_dir
 const aggregate = require('./aggregate_raster_by_shapefile')
 const mkdirp = require('mkdirp');
 
+// Create lookup of country code to raster name
+// Example: arm: ARG_ppp_v2b_2015_UNadj
 const countries = fs.readdirSync(rasters_dir)
 .reduce((h, country) => {
   if (country.match(/^[a-z]{3}$/)) {
@@ -17,6 +22,7 @@ const countries = fs.readdirSync(rasters_dir)
   return h;
 }, {})
 
+// Aggregate a country's raster by each admin level shapefile for that country
 function aggregate_raster_by_all_country_shapefiles(country_code) {
   return new Promise((resolve, reject) => {
     let shapefiles = fs.readdirSync(shapefiles_dir + country_code)
@@ -60,6 +66,10 @@ function sum_up_population_per_admins(results) {
   }, 0)
 }
 
+// Loop through country codes
+// and aggregate country raster
+// by each shapefile for that country
+
 const country_codes = Object.keys(countries);
 bluebird.each(country_codes, country_code => {
   console.log('Getting', country_code)
@@ -68,7 +78,7 @@ bluebird.each(country_codes, country_code => {
   // }
   // if (!go_live) {
   //   return
-  // }  
+  // }
   return aggregate_raster_by_all_country_shapefiles(country_code)
 }, {concurrency: 1})
 .then(process.exit)
