@@ -68,7 +68,8 @@ function aggregate_and_save_results(country_code, shapefile) {
   return new Promise((resolve, reject) => {
     aggregate.aggregate_raster_by_shapefile(
       countries[country_code],
-      shapefiles_dir + country_code + '/' + shapefile
+      shapefiles_dir + country_code + '/' + shapefile,
+      config.python2_path
     ).then(results => {
       mkdirp(results_dir + country_code, (err) => {
           if (err) console.error(err)
