@@ -1,10 +1,10 @@
 var PythonShell = require('python-shell');
 
-exports.aggregate_raster_by_shapefile = (raster_path, shapefile_path, python2_path) => {
+exports.aggregate_raster_by_shapefile = (raster_path, shapefile_path, output_type, python2_path) => {
   var options = {
     pythonOptions: ['-W ignore'],
     pythonPath: python2_path,
-    args: [raster_path, shapefile_path]
+    args: [raster_path, shapefile_path, output_type]
   };
   return new Promise((resolve, reject) => {
     let parsed = {};
