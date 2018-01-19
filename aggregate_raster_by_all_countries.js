@@ -98,6 +98,11 @@ function aggregate_and_save_results(country_code, shapefile) {
           )
 
       });
+    }).catch((err) => {
+      // print the error
+      console.error(err)
+      // resolve the promise to keep the process going
+      resolve()
     })
   })
 }
