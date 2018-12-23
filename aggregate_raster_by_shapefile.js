@@ -33,8 +33,8 @@ function add_admin_id(shape_obj) {
       return shape_obj[k]
     }
   }).join('_')
-  
-  let admin_id = [iso, ids, 'gadm2-8'].join('_');
+
+  let admin_id = [iso, ids, 'gadm3-6'].join('_');
   shape_obj.admin_id = admin_id;
   return shape_obj;
 }
