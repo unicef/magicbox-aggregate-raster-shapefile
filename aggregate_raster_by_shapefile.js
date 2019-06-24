@@ -10,7 +10,8 @@ exports.aggregate_raster_by_shapefile = (raster_path, shapefile_path) => {
     PythonShell.run('aggregate.py', options, function (err, data) {
       if (err) throw err;
       let enriched = JSON.parse(data[0]).map(obj => {
-        return add_admin_id(obj)
+        return obj
+        //return add_admin_id(obj)
       })
       resolve(
         enriched

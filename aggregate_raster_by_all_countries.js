@@ -3,7 +3,7 @@ const config = require('./config');
 
 const fs = require('fs');
 // Directory with rasters
-const raster = config.rasters_dir
+const raster = config.raster
 // Dir where we send results
 const results_dir = config.results_dir
 // Dir with Shapefiles
@@ -13,7 +13,7 @@ const mkdirp = require('mkdirp');
 
 // Create lookup of country code to raster name
 // Example: arm: ARG_ppp_v2b_2015_UNadj
-const countries = fs.readdirSync(shapefiles_dir)
+let countries = fs.readdirSync(shapefiles_dir)
 .reduce((a, country) => {
   if (country.match(/^[a-z]{3}$/i)) {
     a.push(country)
@@ -23,7 +23,9 @@ const countries = fs.readdirSync(shapefiles_dir)
   }
   return a;
 }, [])
-
+index = countries.indexOf('UZB');
+countries = countries.slice(index, countries.length);
+console.log(countries)
 // Aggregate a country's raster by each admin level shapefile for that country
 function aggregate_raster_by_all_country_shapefiles(country_code) {
   return new Promise((resolve, reject) => {
@@ -43,8 +45,8 @@ function aggregate_and_save_results(country_code, shapefile) {
       raster,
       shapefiles_dir + country_code + '/' + shapefile
     ).then(results => {
-      console.log(results)
-      return resolve()
+      console.log(shapefile)
+      require('jsonfile').writeFile(results_dir + shapefile.replace('gadm36_', '').replace('.shp', '.json'), results, (err, data) => { return resolve()})
       // mkdirp(results_dir + country_code, (err) => {
       //     if (err) console.error(err)
       //     let admin_level = shapefile.match(/\d/)[0];
